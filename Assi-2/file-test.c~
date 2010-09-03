@@ -1,0 +1,8 @@
+#include <stdio.h>
+
+int main(){
+     FILE * file;
+     file = fopen("f-test", "w");
+     fclose(file);
+     return 0;
+}

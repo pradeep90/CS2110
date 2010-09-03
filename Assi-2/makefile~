@@ -1,0 +1,2 @@
+file-test :
+	gcc -o ftest file-test.c

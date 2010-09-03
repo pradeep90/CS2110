@@ -1,0 +1,3 @@
+/* tautology.h */
+
+int test();

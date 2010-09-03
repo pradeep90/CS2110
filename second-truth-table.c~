@@ -1,0 +1,76 @@
+/********************************************************************** 
+ * Program name : truth-table
+ * Program : To get a logical expression and construct truth table for it
+ * Date : 13 August 2010
+ * Successful!!!
+ * Things to learn :
+ *** Approach the problem from a high-level
+ *** Abstract away all the different procedures for easier testing and bug removal
+ * Works with command line arguments!!
+
+************************************************************************/
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include "postfix.h"
+
+char ipstr[100] = "", opstr[100]="";
+char listvar[100];
+int numvar, valvar[100],  precedence[256];
+
+int main(int argc, char *argv[]){
+     int i, j, output;
+
+     if(argc == 1)
+	  get_expression(ipstr);
+     else{
+	  /* for(i=1; i<argc; i++) */
+	  /*      strcat(opstr, argv[i]); */
+	  strcpy(ipstr, argv[1]);
+//	  printf("strcat opstr : %s\n", opstr);
+//	  printf("Name of program : %s\n", argv[0]);
+     }
+     
+	  
+     remove_spaces(ipstr);
+     if(check_for_valid_characters(ipstr)){
+	  printf("ERROR! Use only valid characters - ~&|() a-z A-Z\n");
+	  return 0;
+     }
+     set_precedence(precedence,  ipstr);
+     get_var(listvar, &numvar, precedence);
+     if(conv_to_postfix(ipstr, opstr, precedence) == 0)
+	  printf ("\nSuccess in converting to postfix");
+     else{
+	  printf("\nError in input");
+	  return 1;
+     }
+     printf("\nPostfix expression : %s", opstr);
+     printf("\n");
+     for(i=0; i<numvar; i++){
+	  printf("%c ", listvar[i]);
+     }
+     printf("%s ", ipstr);
+     
+     for(i=0; i<(1<<numvar); i++){
+	  /* For each permutation of bits */
+	  //printf("Perm %d : ", i);
+	  printf("\n");
+
+	  compute_val_var_from_perm(i, valvar, numvar);
+	  for(j=0; j<numvar; j++)
+	       printf("%d ", valvar[j]);
+	  output = eval_postfix(opstr, valvar, numvar, listvar);
+	  if(output == 1){
+	       printf("\nError : eval - not enuff operands");
+	       return 1;
+	  }
+	  printf("%c ", eval_postfix(opstr, valvar, numvar, listvar));
+     }
+     printf("\n");
+     
+     return 0;
+}
+
