@@ -1,0 +1,157 @@
+/*
+ * Search given file for a student's ID
+ * Note : Files data-file-x have 10^x student-id|student-names
+ */
+
+
+
+
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+
+using namespace std;
+
+
+class student
+{
+private://public:
+     string ID, name;
+public:
+     // Selectors
+     string get_ID();
+     string get_name();
+     // Set values
+     int set_student_details(string, string);
+     // Equality
+     bool equal(student);
+     bool exists_in_file();
+};
+
+
+ifstream infile, test_infile;
+
+char test_file_name[] = "student-test-cases6";
+char data_file_name[] = "data-file6";
+
+const int max_num = 100;
+student inp[max_num];
+
+
+
+
+string student::get_ID()
+{
+     return ID;
+}
+
+string student::get_name()
+{
+     return name;
+}
+
+int student::set_student_details(string given_id, string given_name)
+{
+     ID = given_id;
+     name = given_name;
+     return 0;
+}
+
+bool student::equal(student s1)
+{
+     if(s1.get_ID() == ID && s1.get_name() == name)
+	  return true;
+     return false;
+}
+
+bool student::exists_in_file()
+{
+     // Assuming read pointer is at the
+     // beginning of the file
+     //student s1;
+     string s_id, s_name;
+     
+     while(getline(infile, s_id, '|')){
+     	  getline(infile, s_name);
+     	  //s1.set_student_details(s_id, s_name);
+     	  // cout<<s1.get_ID()<<'|';
+     	  // cout<<s1.get_name()<<'\n';
+	  if(s_id == ID)
+	       return true;
+	  //cout<<s2.get_ID()<<s2.get_name()<<'\n';
+	  
+     }
+     return false;
+     
+     // infile.close();
+     
+}
+
+// void check_for_each_student()
+// {
+//      int i;
+//      for(i=0; i<max_num; i++){
+// 	  if(inp[i].exists_in_file()){
+// 	       inp[i].display();
+// 	  }
+//      }
+// }
+
+void get_test_inputs()
+{
+     int i;
+     string a, b;
+     test_infile.open(test_file_name);
+     
+     i=0;
+     while(getline(test_infile, a, '|')){
+	  
+	  getline(test_infile, b);
+	  //cout<<a<<" "<<b<<'\n';
+	  inp[i].set_student_details(a, b);
+	  //cout<<inp[i].get_ID()<<" "<<inp[i].get_name()<<'\n';
+	  i++;
+     }
+     cout<<"i : "<<i<<endl;
+     cout<<"Test inputs :\n";
+     
+     for(i=0; i<max_num; i++)
+	  cout<<inp[i].get_ID()<<" "<<inp[i].get_name()<<'\n';
+     
+     test_infile.close();
+}
+
+void check_in_data_file()
+{
+     int i;
+     
+     cout<<"Checking in the files : \n";
+     
+     infile.open(data_file_name);
+     // student foo;
+     // infile.seekg(0);
+     
+     // foo.set_student_details("1173", "Arbit-guy");
+     // cout<<"foo : "<<foo.exists_in_file()<<endl;
+     
+     for(i=0; i<max_num; i++){
+     	  infile.seekg(0);
+	  
+     	  if(inp[i].exists_in_file())
+     	       cout<<inp[i].get_ID()<<" "<<inp[i].get_name()<<'\n';
+     }
+     
+     infile.close();
+}
+
+
+int main(){
+     int i;
+     
+
+     string a, b;
+     get_test_inputs();
+     check_in_data_file();
+     
+     return 0;
+}

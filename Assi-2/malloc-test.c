@@ -1,3 +1,11 @@
+/* Allocating memory using malloc 
+ * Able to allocate around 700,000,000 integers before it returned NULL
+*/
+
+
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
