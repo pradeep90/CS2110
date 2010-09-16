@@ -5,4 +5,4 @@
 # 	gcc -o mtest malloc-test.c
 
 search-file :
-	g++ -o file-search-test search-file-for-id.cpp
+	g++ -o file-search-test search-file-by-loading.cpp
