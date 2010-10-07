@@ -1,0 +1,26 @@
+Readme file - Assignment 2
+
+Program - load-file-and-search.cpp
+Date : 19 - 09 - 2010
+
+* How to build the program -
+  g++ load-file-and-search.cpp
+
+  Execute -
+  ./a.out
+
+* Algorithms used
+  * Basic Linear Search
+
+* Issue(s) faced
+  * Different approaches lead to vastly different running times
+  * For example, Sorting of 10^6 records took 7 seconds
+  * Linear Search was much quicker as the time taken for user to
+    enter key would be greater than time to search
+
+* Testing of code
+  1. With non-existent file name
+  2. With non-numeric or non-positive value for n
+  3. With too few or too many cmd-line arguments
+  4. With too few records in a file
+  5. With newlines in the middle of fields (Accepted as part of field)

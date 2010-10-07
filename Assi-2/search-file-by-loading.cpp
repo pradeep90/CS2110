@@ -21,7 +21,7 @@
  
 
   Bugs :
-  1. ?
+  1. [MAJOR BUG] - Doesn't work with any other data file but the data-files that I have created
 
   Challenge : 
   * Loading 10^6 entries takes ~0.7 seconds
@@ -51,6 +51,7 @@
 
 
 
+
 #include <iostream>
 #include <fstream>
 #include <algorithm>
@@ -61,14 +62,15 @@ using namespace std;
 
 class student
 {
-private://public:
-     string ID, name;
+public:
+     string ID, name, address, dob, cgpa, mobile_no;
 public:
      // Selectors
      string get_ID();
-     string get_name();
+     //string get_name();
+
      // Set values
-     int set_student_details(string, string);
+     int set_student_details(string, string, string, string, string, string);
      // Equality
      bool equal(student);
      bool exists_in_file();
@@ -85,7 +87,8 @@ char test_file_name[] = "student-test-cases6";
 char data_file_name[] = "";
 
 
-
+// Used when reading from test file
+// Max num of test cases, where to start testing from
 const int max_num = 100, start = 0;
 student test_students[max_num];
 
@@ -99,14 +102,20 @@ string student::get_ID()
 {
      return ID;
 }
-string student::get_name()
-{
-     return name;
-}
-int student::set_student_details(string given_id, string given_name)
+
+// string student::get_name()
+// {
+//      return name;
+// }
+
+int student::set_student_details(string given_id, string given_name, string given_address, string given_dob, string given_cgpa, string given_mobile_no)
 {
      ID = given_id;
      name = given_name;
+     address = given_address;
+     dob = given_dob;
+     cgpa = given_cgpa;
+     mobile_no = given_mobile_no;
      return 0;
 }
 
@@ -117,6 +126,7 @@ bool student::equal(student s1)
 	  return true;
      return false;
 }
+
 bool student::exists_in_array(int n, student inp_students[])
 {
      int i = 0;
@@ -127,6 +137,7 @@ bool student::exists_in_array(int n, student inp_students[])
      // 	  cout<<"Student not found!\n";
      // 	  return false;
      // }
+
      for(i=0; i<n; i++)
      	  if(equal(inp_students[i])){
 	       inp_students[i].display();
@@ -138,34 +149,48 @@ bool student::exists_in_array(int n, student inp_students[])
 
 bool student::get_values_from_file()
 {
-     string a, b;
+     string given_id,  given_name,  given_address,  given_dob,  given_cgpa,  given_mobile_no;
 
      if(infile.eof())
 	  return false;
-     
-     getline(infile, a, '|');
-     getline(infile, b);
-     set_student_details(a, b);
+     // CHECK FOR ERROR / EOF
+     getline(infile, given_id, '|');
+     getline(infile, given_name, '|');
+     getline(infile, given_address, '|');
+     getline(infile, given_dob, '|');
+     getline(infile, given_cgpa, '|');
+     getline(infile, given_mobile_no);
+     set_student_details(given_id, given_name, given_address, given_dob, given_cgpa, given_mobile_no);
      return true;
 }
 
 void student::display()
 {
-     cout<<ID<<"|"<<name<<endl;
+     cout<<"ID        : "<<ID<<endl; 
+     cout<<"Name      : "<<name<<endl; 
+     cout<<"Address   : "<<address<<endl; 
+     cout<<"DOB       : "<<dob<<endl; 
+     cout<<"CGPA      : "<<cgpa<<endl; 
+     cout<<"Mobile_no : "<<mobile_no<<endl; 
 }
 
 int get_test_inputs(int n, student inp_students[])
 {
      string input_id;
      student temp;
+
      //temp.set_student_details("au", "aou");
      cout<<"\nPlease enter ID of the student you wish to search for : ";
-     cin>>input_id;
+     //cin>>input_id;
+     getline(cin, input_id);
+     cout<<"input : "<<input_id<<endl;
+
      if(input_id == "exit" || input_id == "EXIT")
 	  return 1;
-     temp.set_student_details(input_id, "");
-     
+     temp.set_student_details(input_id, "", "", "", "", "");
+
      if(temp.exists_in_array(n, inp_students)){
+	  ;
      	  // cout<<"Student with ID : "<<input_id<<" found!\n";
      	  // temp.display();
      }
@@ -181,6 +206,11 @@ int load_n_students_from_file(int n, student inp_students[])
      bool flag = false;
      cout<<"Loading "<<n<<" students from file!\n";
      infile.open(data_file_name);
+     if(!infile){
+	  cout<<"\nERROR : Given File was not found!!\n";
+	  return -1;
+     }
+	  
      cout<<"Please enter 'exit' if you wish to terminate the program!\n";
      
      for(i=0; i<n; i++){
@@ -199,12 +229,12 @@ int load_n_students_from_file(int n, student inp_students[])
 }
 
 int main(int argc, char * argv[]){
-     
      // cout<<"argc : "<<argc<<"\nArgv : \n";
 
      // while(argc--)
      // 	  cout<<argv[argc]<<'\n';
-     int i, n = 1000000;
+
+     int ret, i, n;
      string a, b;
 
      if(argc != 3){
@@ -221,9 +251,15 @@ int main(int argc, char * argv[]){
 
      /* Loading the entire file and searching through it */
      student * const inp_students = new student[n];
-     load_n_students_from_file(n, inp_students);
+     if(ret = load_n_students_from_file(n, inp_students)){
+	  if(ret != -1)
+	       cout<<"\nERROR : Given Data File does not contain "<<n<<" records!\n";
+	  return 1;
+     }
+     
 
      while(!get_test_inputs(n, inp_students));
+
 
      // /* When you want to directly search through the file */
      // //check_in_data_file();
@@ -239,114 +275,113 @@ int main(int argc, char * argv[]){
 }
 
 
-// Unused functions
-bool student::get_values_from_test_file()
-{
-     string a, b;
+// // Unused functions
+// bool student::get_values_from_test_file()
+// {
+//      string a, b;
 
-     if(test_infile.eof())
-	  return false;
+//      if(test_infile.eof())
+// 	  return false;
      
-     getline(test_infile, a, '|');
-     getline(test_infile, b);
-     set_student_details(a, b);
-     return true;
-}
-bool student::exists_in_file()
-{
-     // Assuming read pointer is at the
-     // beginning of the file
+//      getline(test_infile, a, '|');
+//      getline(test_infile, b);
+//      set_student_details(a, b);
+//      return true;
+// }
+// bool student::exists_in_file()
+// {
+//      // Assuming read pointer is at the
+//      // beginning of the file
 
-     string s_id, s_name;
-     student temp;
+//      student temp;
      
-     while(temp.get_values_from_file()){
-	  if(equal(temp))
-	       return true;
-     }
-     return false;
+//      while(temp.get_values_from_file()){
+// 	  if(equal(temp))
+// 	       return true;
+//      }
+//      return false;
      
-}
+// }
 
-void get_inputs_from_test_file()
-{
-     // TODO : Return error if not enough test inputs
-     int i;
-     string a, b;
-     test_infile.open(test_file_name);
+// void get_inputs_from_test_file()
+// {
+//      // TODO : Return error if not enough test inputs
+//      int i;
+//      string a, b;
+//      test_infile.open(test_file_name);
      
-     i=0;
-     for(i=0; i<max_num; i++){
-	  test_students[i].get_values_from_test_file();
-     }
+//      i=0;
+//      for(i=0; i<max_num; i++){
+// 	  test_students[i].get_values_from_test_file();
+//      }
 
-     // while(test_students[i].get_values_from_test_file()){
-     // 	  i++;
-     // }
+//      // while(test_students[i].get_values_from_test_file()){
+//      // 	  i++;
+//      // }
      
-     cout<<"i : "<<i<<endl;
-     cout<<"Test inputs :\n";
+//      cout<<"i : "<<i<<endl;
+//      cout<<"Test inputs :\n";
      
-     for(i=start; i<max_num; i++)
-	  test_students[i].display();
+//      for(i=start; i<max_num; i++)
+// 	  test_students[i].display();
 
-     test_infile.close();
-}
+//      test_infile.close();
+// }
 
-void search_in_array(int n, student inp_students[])
-{
-     int i;
-     cout<<"Searching in Array !\n";
+// void search_in_array(int n, student inp_students[])
+// {
+//      int i;
+//      cout<<"Searching in Array !\n";
      
-     for(i=start; i<max_num; i++){
-	  if(test_students[i].exists_in_array(n, inp_students))
-	       test_students[i].display();
-	  else
-	       cout<<"Student not found!\n\n";
-     }
-}
+//      for(i=start; i<max_num; i++){
+// 	  if(test_students[i].exists_in_array(n, inp_students))
+// 	       test_students[i].display();
+// 	  else
+// 	       cout<<"Student not found!\n\n";
+//      }
+// }
 
 
-// Used when loading and sorting
+// // Used when loading and sorting
 
-int my_binary_search(student a[], int l, int r, student sval)
-{
-     // l, r are indices of the first and last element in a[]
-     int mid = (l+r)/2;
-     //a[mid].display();
-     if(sval.equal(a[mid]))
-	  return mid;
-     else if(cmp(sval, a[mid]))
-	  if(mid - 1 < l)
-	       return -1;
-	  else
-	       return my_binary_search(a, l, mid - 1, sval);
-     else
-	  if(mid + 1 > r)
-	       return -1;
-	  else
-	       return my_binary_search(a, mid + 1, r, sval);
-}
+// int my_binary_search(student a[], int l, int r, student sval)
+// {
+//      // l, r are indices of the first and last element in a[]
+//      int mid = (l+r)/2;
+//      //a[mid].display();
+//      if(sval.equal(a[mid]))
+// 	  return mid;
+//      else if(cmp(sval, a[mid]))
+// 	  if(mid - 1 < l)
+// 	       return -1;
+// 	  else
+// 	       return my_binary_search(a, l, mid - 1, sval);
+//      else
+// 	  if(mid + 1 > r)
+// 	       return -1;
+// 	  else
+// 	       return my_binary_search(a, mid + 1, r, sval);
+// }
 
-// Used when searching in the file itself
-void check_in_data_file()
-{
-     int i;
+// // Used when searching in the file itself
+// void check_in_data_file()
+// {
+//      int i;
      
-     cout<<"Checking in the file : \n";
+//      cout<<"Checking in the file : \n";
      
-     infile.open(data_file_name);
-     // student foo;
-     // infile.seekg(0);
+//      infile.open(data_file_name);
+//      // student foo;
+//      // infile.seekg(0);
      
-     // foo.set_student_details("1173", "Arbit-guy");
-     // cout<<"foo : "<<foo.exists_in_file()<<endl;
+//      // foo.set_student_details("1173", "Arbit-guy");
+//      // cout<<"foo : "<<foo.exists_in_file()<<endl;
      
-     for(i=start; i<max_num; i++){
-     	  infile.seekg(0);
-     	  if(test_students[i].exists_in_file())
-	       test_students[i].display();
-     }
+//      for(i=start; i<max_num; i++){
+//      	  infile.seekg(0);
+//      	  if(test_students[i].exists_in_file())
+// 	       test_students[i].display();
+//      }
      
-     infile.close();
-}
+//      infile.close();
+// }

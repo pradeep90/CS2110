@@ -1,0 +1,40 @@
+Readme file - Assignment 2
+
+Program - load-file-and-search.cpp
+Date : 19 - 09 - 2010
+
+* How to build the program -
+  g++ load-file-and-search.cpp
+
+  Execute -
+  ./a.out
+
+* Algorithms used
+  * Basic Linear Search
+
+* Issue(s) faced
+  * Different approaches lead to vastly different running times
+  * For example, Sorting of 10^6 records took 7 seconds
+  * Linear Search was much quicker as the time taken for user to
+    enter key would be greater than time to search
+
+* Testing of code
+  1. With non-existent file name
+  2. With non-numeric 
+  3. With too few tokens
+  4. With too few variables given
+  5. With different alphabets as variable names
+  6. With spaces
+  7. With postfix expressions (which should not be accepted)
+  8. With correct Infix expressions, but without parentheses
+     to test whether precedence of operators is being checked for
+  9. With above as command line arguments
+
+* References
+ * Convert given Infix expression to Postfix - 
+   Source - Wikipedia
+   http://en.wikipedia.org/wiki/Shunting-yard_algorithm
+   
+ * Evaluate a given Postfix expression for a given set of values
+   Source - Wikipedia
+   http://en.wikipedia.org/wiki/Reverse_Polish_notation

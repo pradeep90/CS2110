@@ -1,0 +1,60 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+class student
+{
+private:
+     string id, name, address, dob, cgpa, mobile_no;
+public:
+     string get_void();
+     void display();
+     void set_student_details(string, string, string, string, string, string);
+     bool is_match(given_id);
+};
+
+     
+class student_database
+{
+private:
+     vector<student> student_records[10000];
+public:
+     int load_n_students_from_file(file_name, n);// 0: not exist 1: wrong-format
+     bool lookup(string given_id, student &stud); // Maybe change to field, index
+};
+
+int main(int argc, char * argv[])
+{
+     student stud;
+     if(argc != 3){
+	  cout<<"Please enter exactly 2 arguments\n"
+	      <<"Name of the file and\n"
+	      <<"No of students records in the file\n";
+     }
+     else{
+	  n = atoi(argv[2]);
+	  data_file_name = string(argv[1]);
+	  cout<<"n : "<<n<<'\n'<<"File name : "<<data_file_name<<'\n';
+     }
+     
+     // Test if command-line arguments are valid
+     // student_database my_DB;
+     // if(my_DB.load_n_students_from_file(argv[1], atoi(argv[2])))
+     // 	  cout<<"ERROR : Bad File!\n";
+     
+     // get_input(&key);
+     
+     // if(my_DB.lookup(key, &stud))
+     // 	  stud.display();
+     // else
+     // 	  cout<<"Student with ID : "<<key<<" NOT FOUND!\n";
+
+     return 0;
+}
+
+     
+      
+
+
+     
